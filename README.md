@@ -67,9 +67,10 @@ data_engineering_assignment_Adge/
 ---
 
 ### **Step 2 – Cartesian Product Generation** *(Critical Fix Applied)*
-- **Goal:** Identify all valid **categorical** combinations for each ad from:
-  - `objective`, `age`, `gender`, `publisher_platform`
-- **Fix:** Explicitly **exclude** `date_start` and `date_stop` from the Cartesian product to avoid unnecessary expansion.  
+- **Goal:** Identify all valid **categorical** combinations for each `ad_id` from:
+  - `objective`, `publisher_platform`, `age`, `gender`
+- **Critical Fix:** Explicitly **exclude** `date_start` and `date_stop` from the Cartesian product because they are not categorical dimensions.  
+  Removing them prevents unnecessary Cartesian explosion and ensures that only relevant categorical dimensions are considered.
 - **Output:** `stage2_cartesian_summary.json`, `stage2_domain_report.csv`  
 - **Files:** `cartesian_missing.py`  
 - **Tests:** `test_cartesian_missing.py`, `test_cartesian_counts_integration.py`
@@ -77,24 +78,25 @@ data_engineering_assignment_Adge/
 ---
 
 ### **Step 3 – Missing Value Estimation**
-- **Goal:** Impute missing metric rows **without altering overall totals**.  
+- **Goal:** Impute missing metric rows without altering overall totals**.  
 - **Strategy:**  
-  - Use marginal distributions & neighborhood-based estimation per `ad_id`.  
-  - Normalize filled values so the total sum matches the original dataset.  
-  - Merge cleanly into a single DataFrame (avoiding duplicated columns).  
+  - Use a sum-preserving proportional allocation method with wildcard matching across categorical dimensions (NA treated as “match any”). 
+  - Normalize filled values so the total per ad_id exactly matches the original dataset.  
+  - Merge cleanly into a single DataFrame, avoiding duplicated columns.  
 - **Files:** `value_estimatio.py`  
 - **Tests:** `test_value_estimation.py`
 
 ---
 
 ### **Step 4 – Visualization & Analytics**
-- **Goal:** Provide analytical insights and visual validation.  
+- **Goal:** Provide analytical insights and visual validation of the estimation process.  
+- **Method:** Visualization is generated after executing Steps 1–3 of the pipeline for a specific `ad_id`.
 - **Features:**  
   - Side-by-side comparison (`Original` vs `Estimated`)  
   - Delta and % change tables per metric  
   - Distribution plots by categorical dimensions  
 - **Files:** `visualization.py`  
-- **Output:** `.png` plots, comparison CSVs
+- **Output:** `.png` plots and comparison CSVs in the `artifacts/` directory
 
 ---
 
@@ -152,4 +154,5 @@ python main.py \
 
 #🧪 Run tests
 pytest -v -s tests
+
 

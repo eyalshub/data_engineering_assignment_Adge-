@@ -149,16 +149,7 @@ python main.py \
 
 ### 🔧 Install dependencies
 
-```bash
-pip install -r requirements.txt
 
-#Run the pipeline
-python main.py \
-  --core-csv "data/test_raw_data_age_gender (1).csv" \
-  --second-csv "data/test_raw_data_publisher_platform.csv" \
-  --out-dir artifacts \
-  --strategy neighbors \
-  --neighbors-k 5 \
-  --viz-metric impressions
 #🧪 Run tests
 pytest -v -s tests
+
